@@ -1,0 +1,56 @@
+name: word-atlas-api
+
+services:
+  api:
+    image: word-atlas-api:latest
+    pull_policy: never
+    env_file:
+      - ./docker/api/api.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    secrets:
+      - mysql_password
+    ports:
+      - "${API_BIND:-127.0.0.1}:${API_PORT:-3000}:3000"
+    networks:
+      - backend
+    restart: unless-stopped
+    stop_grace_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mysql:
+    image: word-atlas-mysql:8.4
+    pull_policy: never
+    env_file:
+      - ./docker/mysql/mysql.env
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+secrets:
+  mysql_password:
+    file: ./docker/secrets/mysql_password
+  mysql_root_password:
+    file: ./docker/secrets/mysql_root_password

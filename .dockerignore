@@ -1,0 +1,11 @@
+.git
+node_modules
+dist
+coverage
+.env
+.env.*
+**/*.env
+docker/secrets
+*.log
+*.tsbuildinfo
+.DS_Store

@@ -93,6 +93,19 @@ NODE_ENV=production npm start
 
 收到 `SIGINT` 或 `SIGTERM` 后，服务停止接收新连接，最多等待 10 秒完成现有请求，再退出。
 
+## Docker 部署
+
+API 和 MySQL 的镜像构建文件、启动脚本及配置模板位于 `docker/`，根目录 `docker-compose.yml` 负责服务编排、网络和持久化存储。
+
+```bash
+sh docker/setup.sh
+# 编辑 docker/api/api.env，设置正式前端域名 CORS_ORIGINS
+sh docker/build.sh
+docker compose up -d --wait --wait-timeout 180
+```
+
+默认仅向服务器本机开放 `127.0.0.1:3000`，数据库无需单独安装，API 启动时自动建表。完整配置、HTTPS 接入和更新步骤见 [Docker 部署说明](docker/README.md)。
+
 ## 响应与日志
 
 路由使用 `{ "success": true, "data": ... }` 返回成功结果。错误统一为：

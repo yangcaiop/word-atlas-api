@@ -7,3 +7,8 @@ coverage/
 *.log
 *.tsbuildinfo
 .DS_Store
+
+# Docker runtime configuration and database passwords
+docker/api/api.env
+docker/mysql/mysql.env
+docker/secrets/
