@@ -1,0 +1,9 @@
+[Unit]
+Description=Renew Word Atlas HTTPS certificates
+Wants=network-online.target
+After=network-online.target nginx.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/certbot renew --quiet --no-random-sleep-on-renew
+TimeoutStartSec=30min

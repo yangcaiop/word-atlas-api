@@ -1,4 +1,5 @@
-FROM mysql:8.4
+ARG MYSQL_IMAGE=mysql:8.4
+FROM ${MYSQL_IMAGE}
 ENV TZ=UTC
 COPY docker/mysql/word-atlas.cnf /etc/mysql/conf.d/word-atlas.cnf
 COPY --chmod=0755 docker/mysql/healthcheck.sh /usr/local/bin/word-atlas-mysql-healthcheck

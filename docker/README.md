@@ -32,6 +32,21 @@ curl --fail http://127.0.0.1:3000/api/health
 
 生成的镜像为 `word-atlas-api:latest` 和 `word-atlas-mysql:8.4`，Compose 直接使用本地镜像。API 使用 Node.js 22，经过多阶段构建后只保留编译产物和生产依赖，并以普通 `node` 用户运行。
 
+`docker-compose.yml` 仅引用构建好的镜像，没有 `build` 配置，因此 `docker compose build` 不会执行构建。请使用 `sh docker/build.sh`。
+
+### 国内服务器的镜像与依赖源
+
+构建脚本支持通过环境变量指定基础镜像和 npm 源，默认仍使用 Docker Hub 和 npm 官方源。服务器无法直连 Docker Hub 时，可以按部署环境选择可用的镜像代理，例如：
+
+```bash
+NODE_IMAGE=docker.m.daocloud.io/library/node:22-bookworm-slim \
+MYSQL_IMAGE=docker.m.daocloud.io/library/mysql:8.4 \
+NPM_REGISTRY=https://registry.npmmirror.com/ \
+sh docker/build.sh
+```
+
+基础镜像可使用 `镜像地址@sha256:摘要` 固定版本。npm 依赖继续使用锁文件中的完整性校验。此方式只影响本次构建，不修改宿主机的 Docker 或 npm 全局配置。
+
 ## 配置与数据
 
 | 位置                                 | 用途                                         |
